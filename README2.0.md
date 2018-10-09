@@ -106,6 +106,13 @@
        加上此步骤，针对静态文件修改可直接ctrl+s保存后查看结果 
     】
         
+        
+**6.项目构建：**
+    
+    1.集成springboot+thyemleaf
+    2.集成mybatis：http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
+        --1.添加依赖 --查看链接
+        --2.添加配置 --查看链接
 
     
     
