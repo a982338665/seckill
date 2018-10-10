@@ -176,6 +176,8 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
+
+
     </dependencies>
     <!--<build>-->
     <!--<finalName>seckill</finalName>-->

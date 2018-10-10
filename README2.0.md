@@ -113,8 +113,21 @@
     2.集成mybatis：http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
         --1.添加依赖 --查看链接
         --2.添加配置 --查看链接
-
-    
+    3.redis安装：
+    4.redis集成：
+        --添加Jedis依赖
+        --添加Fastjson依赖：
+            protostuff-优点：性能高,但不可读，存二进制对象
+            fastjson可读：存字符串，效率相比protostuff低一倍，便于测试选fastjson
+    5.redis封装--
+    ——————————————————————————
+    6.登录功能实现：
+        --数据库设计
+        --密码MD5
+        --jsr303参数校验
+        --全局异常处理器
+        --分布式session
+    ——————————————————————————
     
     
     
