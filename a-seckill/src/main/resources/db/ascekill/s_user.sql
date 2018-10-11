@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50641
 File Encoding         : 65001
 
-Date: 2018-10-10 17:38:49
+Date: 2018-10-11 16:11:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -34,3 +34,4 @@ CREATE TABLE `s_user` (
 -- ----------------------------
 -- Records of s_user
 -- ----------------------------
+INSERT INTO `s_user` VALUES ('17778004652', 'luofeng', 'b7797cce01b4b131b433b6acf4add449', '1a2b3c4d', null, '2018-10-11 09:04:19', '2018-10-11 09:04:23', '1');
