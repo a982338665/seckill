@@ -8,6 +8,7 @@ import java.util.Date;
 public class SGoodsSeckill {
 	private Long id;
 	private Long goodsId;
+	private Double seckillPrice;
 	private Integer seckillStock;
 	private Date startTime;
 	private Date endTime;

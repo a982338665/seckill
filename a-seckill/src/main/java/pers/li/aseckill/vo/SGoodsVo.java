@@ -11,6 +11,7 @@ import java.util.Date;
  */
 @Data
 public class SGoodsVo extends SGoods {
+    private Double seckillPrice;
     private Integer seckillStock;
     private Date startTime;
     private Date endTime;
