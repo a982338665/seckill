@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 
+import pers.li.aseckill.redis.service.SUserKey;
 import pers.li.aseckill.utils.Convert;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -108,4 +109,20 @@ public class RedisService {
 		 }
 	}
 
+	/**
+	 * 删除
+	 * @param prefix
+	 * @param key
+	 */
+	public void delete(SUserKey prefix, String key) {
+		Jedis jedis = null;
+		try {
+			jedis =  jedisPool.getResource();
+			//生成真正的key
+			String realKey  = prefix.getPrefix() + key;
+			jedis.del(realKey);
+		}finally {
+			returnToPool(jedis);
+		}
+	}
 }

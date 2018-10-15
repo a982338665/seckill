@@ -11,4 +11,8 @@ public class SUserKey extends BasePrefix {
 		super(expireSeconds, prefix);
 	}
 	public static SUserKey token = new SUserKey(TOKEN_EXPIRE, "tk");
+	/**
+	 * 对象缓存，如果不做修改，则永久有效，故不设有效期
+	 */
+	public static SUserKey getById = new SUserKey(0, "id");
 }

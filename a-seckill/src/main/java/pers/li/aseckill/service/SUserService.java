@@ -5,32 +5,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import pers.li.aseckill.dao.SUserDao;
-import pers.li.aseckill.dao.TestDao;
 import pers.li.aseckill.entity.SUser;
-import pers.li.aseckill.entity.Test;
 import pers.li.aseckill.exception.GlobalException;
 import pers.li.aseckill.redis.RedisService;
 import pers.li.aseckill.redis.service.SUserKey;
 import pers.li.aseckill.result.CodeMsg;
-import pers.li.aseckill.utils.HttpServletUtil;
 import pers.li.aseckill.utils.MD5Util;
 import pers.li.aseckill.utils.UUIDUtil;
 import pers.li.aseckill.vo.LoginVo;
-import pers.li.aseckill.web.GoodsController;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 /**
  * @author:luofeng
@@ -47,9 +33,52 @@ public class SUserService {
     @Autowired
     RedisService redisService;
 
+    /**
+     * 优化点：设置对象级缓存永久有效
+     * @param mobile
+     * @return
+     */
     public SUser getById(long mobile){
-        return sUserDao.getUserById(mobile);
+        //取缓存
+        SUser user = redisService.get(SUserKey.getById, ""+mobile, SUser.class);
+        if(user != null) {
+            return user;
+        }
+        //取数据库
+        user = sUserDao.getUserById(mobile);
+        if(user != null) {
+            redisService.set(SUserKey.getById, ""+mobile, user);
+        }
+        return user;
     }
+
+    /**
+     * 修改时，要修改对象缓存--永久性
+     * @param token
+     * @param id
+     * @param formPass
+     * @return
+     */
+    // http://blog.csdn.net/tTU1EvLDeLFq5btqiK/article/details/78693323
+    public boolean updatePassword(String token, long id, String formPass) {
+        //取user
+        SUser user = getById(id);
+        if(user == null) {
+            throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+        }
+        //更新数据库
+        SUser toBeUpdate = new SUser();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.formPassToDBPass(formPass, user.getSalt()));
+        sUserDao.update(toBeUpdate);
+        //处理缓存
+        redisService.delete(SUserKey.getById, ""+id);
+        user.setPassword(toBeUpdate.getPassword());
+        redisService.set(SUserKey.token, token, user);
+        return true;
+    }
+
+
 
     public String login(HttpServletResponse response,LoginVo loginVo) {
         log.info("------------------------->");
