@@ -144,10 +144,114 @@
          4.订单详情页
     ———————————————————————————
     8.jmeter压测：
-        1.jmeter入门
+        1.jmeter入门      --查看boodTools仓库下的 https://github.com/a982338665/buildTool/tree/master/jmeter
+            --0.测试环境：
+                redis 4.0.11 命令：redis-server -v
+                mydql 5.6.41 命令：mysql -v 
+                CentOS Linux release 7.5.1804 
+                ...
+            --1.商品列表测试结果 F:\github-work\seckill\a-seckill\src\main\resources\test\first      /goods/index_list
+            --2.获取用户信息测试结果 F:\github-work\seckill\a-seckill\src\main\resources\test\first   /user/info
+            ========================
+            --优化：
+                --1.增加jdbc连接数
+                    spring.datasource.druid.initial-size=100
+                    spring.datasource.druid.min-idle=500
+                    spring.datasource.druid.max-active=1000
+                --2.增加redis连接数
+                    spring.redis.timeout=10
+                    spring.redis.pool.max-wait=500
+                    spring.redis.pool.max-idle=500
+                    spring.redis.pool.max-active=1000
         2.自定义变量模拟多用户
+            --见位置：F:\github-work\seckill\a-seckill\src\main\resources\test\cvs
+            --
         3.命令行使用：服务器压测方式
         4.redis压测工具:redis-benchmark
-        5.springboot打war包
-    
+        5.springboot打war包   
+            --1.添加依赖--编译时使用
+                <dependency>
+                	<groupId>org.springframework.boot</groupId>
+                	<artifactId>spring-boot-starter-tomcat</artifactId>
+                	<scope>provided</scope>
+                </dependency>
+            --2.添加插件
+                <build>
+                	<finalName>${project.artifactId}</finalName>
+                	<plugins>
+                		<plugin>
+                			<groupId>org.springframework.boot</groupId>
+                			<artifactId>spring-boot-maven-plugin</artifactId>
+                			<configuration>
+                				<!--fork :  如果没有该项配置，肯定devtools不会起作用，即应用不会restart -->
+                				<fork>true</fork>
+                			</configuration>
+                			<executions>
+                				<execution>
+                					<goals>
+                						<goal>repackage</goal>
+                					</goals>
+                				</execution>
+                			</executions>
+                		</plugin>
+                		<plugin>
+                			<groupId>org.apache.maven.plugins</groupId>
+                			<artifactId>maven-war-plugin</artifactId>
+                			<configuration>
+                				<failOnMissingWebXml>false</failOnMissingWebXml>
+                			</configuration>
+                		</plugin>
+                
+                	</plugins>
+                </build>
+            --3.修改启动类：
+                public class ASeckillApplication extends SpringBootServletInitializer{
+                
+                	public static void main(String[] args) {
+                		SpringApplication.run(ASeckillApplication.class, args);
+                	}
+                
+                	@Override
+                	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+                		return builder.sources(ASeckillApplication.class);
+                	}
+                }
+            --4.以上修改可支持war包：如不支持项目名则部署在tomcat中webapp下的ROOT下面，访问可不带项目名
+        6.jar包启动+命令行测试：--linux下：
+            --0.cd /usr/local/project
+            --1.linux下载jmeter
+                wget http://mirrors.shu.edu.cn/apache//jmeter/binaries/apache-jmeter-5.0.tgz
+            --2.传输打好的jar包进来：a-seckill.jar
+            --3.后台启动并将进程日志输出到nohup.out中：nohup java -jar a-seckill.jar &
+            ======================================
+            --4.准备压测脚本：
+                1,windows上录好jmx，传输到linux下/usr/local/project
+                    drwxr-xr-x. 8 root root      138 2018-10-15 14:13:17 apache-jmeter-5.0
+                    -rw-r--r--. 1 root root 53847192 2018-09-18 16:13:59 apache-jmeter-5.0.tgz
+                    -rw-r--r--. 1 root root 34361400 2018-10-15 14:07:49 a-seckill.jar
+                    -rw-r--r--. 1 root root     8264 2018-10-15 14:30:37 create-windows-jmx-goods-list.jmx
+                    -rw-------. 1 root root     9956 2018-10-15 14:18:53 nohup.out
+                2.命令行：sh jmeter,sh -n -t xxx.jmx -l result.jtl
+                    ./apache-jmeter-5.0/bin/jmeter.sh -n -t create-windows-jmx-goods-list.jmx -l result.jtl
+                    --打开另一个ssh：top 查看负载
+                    --查看当前cpu个数：cat /proc/cpuinfo |grep processor
+                    --可以看出严重负载问题
+                3.将result.jtl导入jmeter --windows
+                
+ **7.秒杀接口压测：**
+ 
+     --UserUtils生成用户数据，模拟登陆获取token
+     --写压测脚本：jmeter
+         --参数：token
+         --商品id：1
+     --经测试;出现秒杀商品卖多的情况--需修改++++++++++++++++++++++++++++
+            
+            
+            
+            
+            
+            
+            
+            
+                      
     

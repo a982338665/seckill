@@ -51,7 +51,7 @@ public class SUserService {
         return sUserDao.getUserById(mobile);
     }
 
-    public boolean login(HttpServletResponse response,LoginVo loginVo) {
+    public String login(HttpServletResponse response,LoginVo loginVo) {
         log.info("------------------------->");
         if(loginVo==null){
             throw new GlobalException( CodeMsg.SERVER_ERROR);
@@ -73,7 +73,7 @@ public class SUserService {
         //生成cookie,有效期设置为与session一致
         String token = UUIDUtil.uuid();
         addCookie(response,token,byId);
-        return true;
+        return token;
 
 
     }

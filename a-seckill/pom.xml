@@ -13,7 +13,7 @@
 	<groupId>pers.li</groupId>
 	<artifactId>a-seckill</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>a-seckill</name>
 	<description>Demo project for Spring Boot</description>
@@ -111,6 +111,8 @@
 	</dependencies>
 
 	<build>
+		<!--打包后的名称-->
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -127,6 +129,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--	<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>-->
 
 		</plugins>
 	</build>

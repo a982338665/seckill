@@ -38,7 +38,7 @@ public class LoginController
     }
     @RequestMapping("/login")
     @ResponseBody
-    public Result<Boolean> login(@Valid LoginVo loginVo){
+    public Result<String> login(@Valid LoginVo loginVo){
         log.info(loginVo.toString());
         //参数校验
 //        String mobile = loginVo.getMobile();
