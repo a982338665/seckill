@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import pers.li.aseckill.dao.SGoodDao;
 import pers.li.aseckill.entity.SOrderInfo;
 import pers.li.aseckill.entity.SOrderSeckill;
@@ -28,6 +29,13 @@ public class SeckillService {
     @Autowired
     SOrderService sOrderService;
 
+    /**
+     *   手动回滚事务
+     *   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+     * @param user
+     * @param goods
+     * @return
+     */
     @Transactional(rollbackFor = Exception.class)
     public SOrderInfo seckill(SUser user, SGoodsVo goods) {
         //减库存，下订单，写入秒杀订单---最好将逻辑写在相对应的service中，注入service
