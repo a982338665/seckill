@@ -32,8 +32,16 @@ public class SeckillController {
 			return "login";
 		}
 		model.addAttribute("user",user);
-    	//判断库存
+
 		SGoodsVo goods = sGoodService.getGoodsVoByGoodsId(goodsId);
+		//判断活动是否开始
+		long time =System.currentTimeMillis();
+		if(time<goods.getStartTime().getTime() || time>goods.getEndTime().getTime()){
+			model.addAttribute("errmsg", CodeMsg.NO_PASS_SECKILL.getMsg());
+			model.addAttribute("errcode", CodeMsg.NO_PASS_SECKILL.getCode());
+			return "seckill_fail";
+		}
+		//判断库存
 		int stock = goods.getSeckillStock();
 		if(stock <= 0) {
 			model.addAttribute("errmsg", CodeMsg.MIAO_SHA_OVER.getMsg());
