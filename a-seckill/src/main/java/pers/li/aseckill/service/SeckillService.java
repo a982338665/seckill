@@ -29,9 +29,9 @@ public class SeckillService {
     @Autowired
     SOrderService sOrderService;
 
+
     /**
-     *   手动回滚事务
-     *   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+     * 自动事务回滚
      * @param user
      * @param goods
      * @return
@@ -42,6 +42,51 @@ public class SeckillService {
         sGoodService.reduceStock(goods);
         //s_order_info s_order_seckill
         return sOrderService.createOrder(user,goods);
+
+    }
+    /**
+     *   手动回滚事务--if测试
+     *   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+     * @param user
+     * @param goods
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public SOrderInfo seckill2(SUser user, SGoodsVo goods) {
+        //减库存，下订单，写入秒杀订单---最好将逻辑写在相对应的service中，注入service
+        SOrderInfo order =null;
+        sGoodService.reduceStock(goods);
+        order=sOrderService.createOrder(user, goods);
+        //s_order_info s_order_seckill
+        int x=0;
+        if(x==0){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new RuntimeException("if-测试事务回滚：手动回滚");
+        }
+        return order;
+
+    }
+    /**
+     *   手动回滚事务--try-catch测试
+     *   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+     * @param user
+     * @param goods
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public SOrderInfo seckill3(SUser user, SGoodsVo goods) {
+        SOrderInfo order =null;
+        try{
+            //减库存，下订单，写入秒杀订单---最好将逻辑写在相对应的service中，注入service
+            sGoodService.reduceStock(goods);
+            order=sOrderService.createOrder(user, goods);
+            int x=1/0;
+            //s_order_info s_order_seckill
+        }catch(Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw new RuntimeException("try-catch-测试事务回滚：手动回滚");
+        }
+        return order;
 
     }
 }
