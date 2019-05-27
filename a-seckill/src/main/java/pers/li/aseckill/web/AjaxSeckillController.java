@@ -22,7 +22,9 @@ import pers.li.aseckill.service.SOrderService;
 import pers.li.aseckill.service.SeckillService;
 import pers.li.aseckill.vo.SGoodsVo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 秒杀静态化：数据传输使用json，亲后端交互使用ajax
@@ -41,6 +43,8 @@ public class AjaxSeckillController implements InitializingBean {
     RedisService redisService;
     @Autowired
     MQSender mqSender;
+
+    private Map<Long,Boolean> map = new HashMap<>();
     /**
      * QPS:1306
      * 5000 * 10
@@ -86,9 +90,15 @@ public class AjaxSeckillController implements InitializingBean {
         if (user == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
+        //内存标记
+        Boolean aBoolean = map.get(goodsId);
+        if(aBoolean){
+            return Result.error(CodeMsg.MIAO_SHA_OVER);
+        }
         //redis预减库存
         Long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsId);
         if(stock<0){
+            map.put(goodsId,true);
             return Result.error(CodeMsg.MIAO_SHA_OVER);
         }
         //判断是否已经秒杀到了
@@ -120,6 +130,7 @@ public class AjaxSeckillController implements InitializingBean {
                 ) {
 //            存储秒杀商品库存
             redisService.set(GoodsKey.getSeckillGoodsStock,""+ sGoodsVo.getId(), sGoodsVo.getSeckillStock());
+            map.put(sGoodsVo.getId(),false);
         }
     }
 }
