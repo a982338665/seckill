@@ -48,11 +48,11 @@ public class SOrderService {
         sOrderInfo.setOrderChannel(1);
         sOrderInfo.setStatus(OrderEnum.NO_PAY.getStatus());
         sOrderInfo.setUserId(user.getId());
-        long orderId=sOrderDao.insertOrderInfo(sOrderInfo);
+        sOrderDao.insertOrderInfo(sOrderInfo);
         //s_order_seckill
         SOrderSeckill orderSeckill=new SOrderSeckill();
         orderSeckill.setGoodsId(goods.getId());
-        orderSeckill.setOrderId(orderId);
+        orderSeckill.setOrderId(sOrderInfo.getId());
         orderSeckill.setUserId(user.getId());
         sOrderDao.insertSOrderSeckill(orderSeckill);
 

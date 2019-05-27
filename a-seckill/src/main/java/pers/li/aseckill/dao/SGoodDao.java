@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import pers.li.aseckill.entity.SGoodsSeckill;
-import pers.li.aseckill.entity.SUser;
 import pers.li.aseckill.vo.SGoodsVo;
 
 import java.util.List;
@@ -26,5 +25,5 @@ public interface SGoodDao {
     SGoodsVo getSeckillGoodbyId(@Param("id") long goodsId);
 
     @Update("UPDATE s_goods_seckill set seckill_stock=seckill_stock-1 where goods_id=#{goodsId}")
-    void reduceStock(SGoodsSeckill goods);
+    int reduceStock(SGoodsSeckill goods);
 }

@@ -45,6 +45,22 @@ public class SeckillService {
 
     }
     /**
+     * 自动事务回滚
+     * @param user
+     * @param goods
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public SOrderInfo seckillMQ(SUser user, SGoodsVo goods) {
+        //减库存，下订单，写入秒杀订单---最好将逻辑写在相对应的service中，注入service
+        boolean success = sGoodService.reduceStockMQ(goods);
+        if(success){
+            return sOrderService.createOrder(user,goods);
+        }else{
+            return null;
+        }
+    }
+    /**
      *   手动回滚事务--if测试
      *   TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
      * @param user

@@ -21,6 +21,7 @@ public class MQConfig {
     public final static String FANOUT_EXCHANGE = "fanout_exchange";
     public final static String HEADERS_EXCHANGE = "header_exchange";
     public final static String HEADER_QUEUE = "header_queue";
+    public final static String SECKILL_QUEUE = "seckill_queue";
 
     /**
      * direct 模式 交换机 Exchange
@@ -30,6 +31,15 @@ public class MQConfig {
     @Bean
     public Queue queue() {
         return new Queue(QUEUE, true);
+    }
+    /**
+     * direct 模式 交换机 Exchange
+     *
+     * @param
+     */
+    @Bean
+    public Queue queueSeckill() {
+        return new Queue(SECKILL_QUEUE, true);
     }
 
     /**

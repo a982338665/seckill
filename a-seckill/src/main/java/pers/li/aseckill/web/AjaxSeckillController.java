@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pers.li.aseckill.entity.SOrderInfo;
 import pers.li.aseckill.entity.SOrderSeckill;
 import pers.li.aseckill.entity.SUser;
+import pers.li.aseckill.rabbitmq.MQSender;
+import pers.li.aseckill.rabbitmq.SeckillMessage;
 import pers.li.aseckill.redis.RedisService;
 import pers.li.aseckill.redis.service.GoodsKey;
 import pers.li.aseckill.result.CodeMsg;
@@ -35,9 +37,10 @@ public class AjaxSeckillController implements InitializingBean {
     SOrderService sOrderService;
     @Autowired
     SeckillService seckillService;
-
     @Autowired
     RedisService redisService;
+    @Autowired
+    MQSender mqSender;
     /**
      * QPS:1306
      * 5000 * 10
@@ -67,6 +70,39 @@ public class AjaxSeckillController implements InitializingBean {
         //减库存 下订单 写入秒杀订单
         SOrderInfo orderInfo = seckillService.seckill(user, goods);
         return Result.success(orderInfo);
+    }
+    /**
+     * QPS:1306
+     * 5000 * 10
+     * */
+    /**
+     * GET POST有什么区别？
+     */
+    @RequestMapping(value = "/seckill-mq", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<Integer> miaoshaMQ(Model model, SUser user,
+                                      @RequestParam("goodsId") long goodsId) {
+        model.addAttribute("user", user);
+        if (user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        //redis预减库存
+        Long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsId);
+        if(stock<0){
+            return Result.error(CodeMsg.MIAO_SHA_OVER);
+        }
+        //判断是否已经秒杀到了
+        SOrderSeckill orderSeckill = sOrderService.getMiaoshaOrderByUserIdGoodsId(user.getId(), goodsId);
+        if (orderSeckill != null) {
+            return Result.error(CodeMsg.REPEATE_MIAOSHA);
+        }
+        //入队MQ
+        SeckillMessage seckillMessage = new SeckillMessage();
+        seckillMessage.setSUser(user);
+        seckillMessage.setGoodsId(goodsId);
+        mqSender.sendSeckill(seckillMessage);
+        //返回排队中
+        return Result.success(0);
     }
 
     /**

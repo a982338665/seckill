@@ -45,4 +45,11 @@ public class MQSender {
         Message message1 = new Message(message.getBytes(),messageProperties);
         amqpTemplate.convertAndSend(MQConfig.HEADERS_EXCHANGE,"",message1);
     }
+
+
+    public void sendSeckill(SeckillMessage msg) {
+        String message= Convert.beanToString(msg);
+        log.info("send ======》"+message);
+        amqpTemplate.convertAndSend(MQConfig.SECKILL_QUEUE,message);
+    }
 }

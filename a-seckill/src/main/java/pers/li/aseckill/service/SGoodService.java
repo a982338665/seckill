@@ -37,4 +37,10 @@ public class SGoodService {
         sGoodsSeckill.setGoodsId(goods.getId());
         sGoodDao.reduceStock(sGoodsSeckill);
     }
+    public boolean reduceStockMQ(SGoodsVo goods) {
+        SGoodsSeckill sGoodsSeckill=new SGoodsSeckill();
+        sGoodsSeckill.setGoodsId(goods.getId());
+        int ret = sGoodDao.reduceStock(sGoodsSeckill);
+        return ret>0;
+    }
 }
