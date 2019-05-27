@@ -30,6 +30,7 @@ public class SOrderService {
     SOrderDao sOrderDao;
 
     public SOrderSeckill getMiaoshaOrderByUserIdGoodsId(Long id, long goodsId) {
+        // 查询redis --> 优化
         return sOrderDao.getMiaoshaOrderByUserIdGoodsId(id,goodsId);
     }
 
@@ -54,6 +55,9 @@ public class SOrderService {
         orderSeckill.setOrderId(orderId);
         orderSeckill.setUserId(user.getId());
         sOrderDao.insertSOrderSeckill(orderSeckill);
+
+        //存储在redis中 --> 优化
+
         return sOrderInfo;
     }
 }
