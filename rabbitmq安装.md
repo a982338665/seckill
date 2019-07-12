@@ -40,13 +40,13 @@
             ps -ef |grep rabbitmq
         8.添加系统环境变量 根目录启动
             vim /etc/profile
-                添加：
+                添加：若提示错误则分开写
                 export PATH=$PATH:/usr/local/ruby/bin;/usr/local/erlang/bin;/usr/local/rabbitmq/sbin
             esc
             :wq
             source /etc/profile
-            rabbitmq-server
-        9.启用web管理界面
+                rabbitmq-server
+        9.启用web管理界面 : 端口号默认15672 访问 localhost:15672
           ./rabbitmq-plugins enable rabbitmq_management
           启动
           ./rabbitmq-server -detached
@@ -66,3 +66,23 @@
             [{rabbit, [{loopback_users, []}]}].
        3.重启
     2.www.rabbitmq.com/download.html
+    
+**3.RabbitMQ 清除全部队列及消息:**
+
+    前言
+    安装RabbitMQ后可访问：http://{rabbitmq安装IP}:15672使用(默认的是帐号guest，密码guest。此账号只能在安装RabbitMQ的机器上登录，无法远程访问登录。）
+    远程访问登录，可以使用自己创建的帐号，给与对应的管理员权限即可。
+    
+    直接在管理页面删除
+    访问http://{rabbitmq安装IP}:15672，登录。
+    点击queues，这里可以看到你创建的所有的Queue，
+    选中某一个Queue，下方有个Delete Queue删除队列/Purge Message清除消息。
+    但是这样只能一个队列一个队列的删除，如果队列中的消息过多就会特别慢。
+    
+    命令行批量删除
+    首先定位到 rabbitMQ 安装目录的sbin 目录下。打开cmd窗口。
+    关闭应用的命令为： rabbitmqctl stop_app
+    清除的命令为： rabbitmqctl reset
+    重新启动命令为： rabbitmqctl start_app
+    ps
+    查看所有队列命令： rabbitmqctl list_queues
