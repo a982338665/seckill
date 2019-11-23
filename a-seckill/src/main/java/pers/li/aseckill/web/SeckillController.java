@@ -32,6 +32,7 @@ public class SeckillController {
 			return "login";
 		}
 		model.addAttribute("user",user);
+		//真实场景中，可能还需要判断用户是否有收货地址
 
 		SGoodsVo goods = sGoodService.getGoodsVoByGoodsId(goodsId);
 		//判断活动是否开始
