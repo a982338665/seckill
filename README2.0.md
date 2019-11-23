@@ -223,6 +223,14 @@
                 wget http://mirrors.shu.edu.cn/apache//jmeter/binaries/apache-jmeter-5.0.tgz
             --2.传输打好的jar包进来：a-seckill.jar
             --3.后台启动并将进程日志输出到nohup.out中：nohup java -jar a-seckill.jar &
+                解压命令：unzip EtnetChinaApplication.jar -d app
+                压缩命令：jar cvfm0 MR-XDR-JMR-NEW.jar META-INF/MANIFEST.MF .
+                移动命令：mv EtnetChinaApplication.jar ../kps.jar
+                安装命令： yum install zip    #提示输入时，请输入y；
+                安装命令：yum install unzip #提示输入时，请输入y；
+                运行项目：nohup java -jar kps.jar --server.port=80 >> mss.log  2>& 1 &
+                查看启动所有的服务：ps	-a
+                查询指定启动的服务：ps -ef | grep java
             ======================================
             --4.准备压测脚本：
                 1,windows上录好jmx，传输到linux下/usr/local/project
@@ -328,4 +336,3 @@
             
             
                       
-    
