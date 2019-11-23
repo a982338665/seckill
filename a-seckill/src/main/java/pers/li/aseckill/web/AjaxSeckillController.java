@@ -95,7 +95,7 @@ public class AjaxSeckillController implements InitializingBean {
         if(aBoolean){
             return Result.error(CodeMsg.MIAO_SHA_OVER);
         }
-        //redis预减库存
+        //redis预减库存：不能准确卖出指定商品个数，会少不会超
         Long stock = redisService.decr(GoodsKey.getSeckillGoodsStock, "" + goodsId);
         if(stock<0){
             map.put(goodsId,true);
