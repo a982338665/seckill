@@ -17,15 +17,15 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!-- 生成bean类存放位置 -->
-        <javaModelGenerator targetPackage="org.seckill.entity"
+        <javaModelGenerator targetPackage="org.common.entity"
                             targetProject="src/main/java">
         </javaModelGenerator>
         <!-- 生成mapper文件存放位置 -->
-        <sqlMapGenerator targetPackage="org.seckill.service"
+        <sqlMapGenerator targetPackage="org.common.service"
                          targetProject="src/main/java">
         </sqlMapGenerator>
         <!-- 生成Dao类存放位置 -->
-        <javaClientGenerator targetPackage="org.seckill.dao"
+        <javaClientGenerator targetPackage="org.common.dao"
                              type="XMLMAPPER" targetProject="src/main/java">
         </javaClientGenerator>
 
