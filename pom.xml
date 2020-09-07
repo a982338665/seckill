@@ -12,6 +12,7 @@
     <module>seckill</module>
     <module>seckill_service</module>
     <module>seckill_web</module>
+    <module>girl</module>
   </modules>
 
 
